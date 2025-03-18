@@ -746,6 +746,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     .home-image, .home-text {
         flex: 1 1 100%;
         text-align: center;
+        align-items: center;
     }
     
     .home-text h1 {
@@ -754,6 +755,11 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     
     .home-text h2 {
         font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .home-text p {
+        text-align: center;
     }
 
     #skills {
