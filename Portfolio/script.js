@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             projectsContainer.appendChild(clone);
         });
 
-        updateScrolling();
+        updateScrolling(true); // Force animation for "all"
     }
 
     // Function to filter and display projects
@@ -167,29 +167,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Ensure continuous scrolling effect
-        if (filteredCards.length > 0) {
-            filteredCards = [...filteredCards, ...filteredCards]; // Duplicate for seamless looping
+        // For "all" category, duplicate cards for seamless looping
+        // Add enough duplicates to prevent empty space
+        if (language === "all" && filteredCards.length > 0) {
+            // Add multiple copies to ensure there's enough content to fill the container
+            filteredCards = [...filteredCards, ...filteredCards,];
         }
 
         // Append filtered cards
         filteredCards.forEach((card) => projectsContainer.appendChild(card));
 
-        updateScrolling();
+        // Apply appropriate scrolling behavior
+        updateScrolling(language === "all");
     }
 
-    // Function to adjust scrolling animation based on content width
-    function updateScrolling() {
+    // Function to adjust scrolling animation based on content width and selected language
+    function updateScrolling(isAllCategory) {
         let totalWidth = 0;
         projectsContainer.querySelectorAll(".project-card").forEach((card) => {
             totalWidth += card.offsetWidth + 32; // Account for gap (2rem)
         });
 
-        if (totalWidth > projectsContainer.parentElement.offsetWidth) {
-            projectsContainer.style.animation = "scrollProjects 10s linear infinite";
+        // Reset any previous settings
+        projectsContainer.style.transform = "translateX(0)";
+        
+        // Only apply auto-scrolling animation for "all" category
+        if (isAllCategory) {
+            // Disable user scrolling for "all" category
+            projectsContainer.style.overflowX = "hidden";
+            projectsContainer.parentElement.style.overflowX = "hidden";
+            
+            // Apply animation only if there's enough content
+            if (totalWidth > projectsContainer.parentElement.offsetWidth) {
+                projectsContainer.style.animation = "scrollProjects 10s linear infinite";
+            } else {
+                projectsContainer.style.animation = "none";
+            }
         } else {
+            // Enable user scrolling for other categories
             projectsContainer.style.animation = "none";
-            projectsContainer.style.transform = "translateX(0)";
+            projectsContainer.style.overflowX = "auto";
+            projectsContainer.parentElement.style.overflowX = "auto";
+            projectsContainer.style.scrollBehavior = "smooth";
         }
     }
 
