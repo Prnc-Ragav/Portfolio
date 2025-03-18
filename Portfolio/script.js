@@ -246,8 +246,4 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector(".projects-outer-container").addEventListener("mouseleave", function () {
         projectsContainer.style.animationPlayState = "running";
     });
-
-    document.querySelectorAll('a').forEach(link => {
-        link.setAttribute('target', '_blank');
-    });
 });
