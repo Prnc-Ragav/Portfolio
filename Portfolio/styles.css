@@ -113,7 +113,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
 }
 
 .home-image {
-    flex: 1;
+    /* flex: 1; */
     min-width: 300px;
 }
 
@@ -125,31 +125,38 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
 }
 
 .home-text {
-    flex: 1;
-    min-width: 300px;
+    /* flex: 1; */
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    gap:40px;
+    margin-left: 20px;
 }
 
 .home-text h1 {
     font-size: 3rem;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     color: #222;
+    text-align: left;
 }
 
 .home-text h2 {
     font-size: 1.8rem;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     color: #555;
     font-weight: 500;
     text-align: left;
 }
 
 .home-text p {
-    font-size: 1.1rem;
-    margin-bottom: 30px;
+    font-size: 1.4rem;
+    margin-bottom: 0;
     text-align: left;
+    line-height: 1.2;
 }
 
 .home-viewBtn {
+    max-width: 170px;
     display: inline-block;
     background-color: #3498db;
     color: white;
@@ -230,7 +237,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-25%);
+        transform: translateX(-50%);
     }
 }
 
@@ -574,8 +581,8 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
 }
 
 .contact-info {
-    max-width: 800px;
-    margin: 0 auto 50px;
+    min-width: 600px;
+    margin: 0 50px;
 }
 
 .contact-item {
@@ -583,7 +590,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     align-items: center;
     margin-bottom: 50px;
     transition: transform 0.3s ease;
-    gap:100px;
+    gap:10px;
 }
 
 .contact-item:hover {
@@ -630,9 +637,10 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
 }
 
 .contact-details p {
+    font-weight: bold;
     margin: 0;
     color: #666;
-    font-size: 16px;
+    font-size: 20px;
 }
 
 .item-left {
@@ -815,6 +823,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
 
     .contact-info {
         padding: 0 10px;
+        min-width: 500px;
     }
     
     .contact-item {
@@ -852,6 +861,10 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     #contact {
         padding: 60px 15px;
         padding-bottom: 0;
+    }
+
+    .contact-info {
+        min-width: 300px;
     }
     
     .contact-icon {
