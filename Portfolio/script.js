@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentIndex = 0;
     let isScrolling = false;
+    let isMobileView = window.innerWidth <= 1000;
     
     // Function to update navigation
     function updateNav(index) {
@@ -22,20 +23,49 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Detect which section is currently viewed
     function getCurrentSection() {
-        const containerScroll = scroll_x.scrollLeft;
-        const windowWidth = window.innerWidth;
+        if (isMobileView) {
+            // For mobile: determine based on vertical scroll position
+            const scrollTop = window.scrollY;
+            let closestSection = 0;
+            let minDistance = Infinity;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop;
+                const distance = Math.abs(scrollTop - sectionTop);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestSection = index;
+                }
+            });
+            
+            return closestSection;
+        }
+        else {
+            const containerScroll = scroll_x.scrollLeft;
+            const windowWidth = window.innerWidth;
         
-        return Math.round(containerScroll / windowWidth);
+            return Math.round(containerScroll / windowWidth);
+        }
     }
     
     // Scroll to specific section
     function scrollToSection(index) {
         isScrolling = true;
         
-        scroll_x.scrollTo({
-            left: index * window.innerWidth,
-            behavior: 'smooth'
-        });
+        if (isMobileView) {
+            // Vertical scrolling for mobile
+            window.scrollTo({
+                top: sections[index].offsetTop,
+                behavior: 'smooth'
+            });
+        }
+        else{
+            scroll_x.scrollTo({
+                left: index * window.innerWidth,
+                behavior: 'smooth'
+            });
+        }
         
         updateNav(index);
         
@@ -47,19 +77,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle wheel event (convert vertical scroll to horizontal)
     document.addEventListener('wheel', function(e) {
-        if (window.innerWidth <= 768) return;
-
-        e.preventDefault();
-        
-        if (isScrolling) return;
-        
-        // Determine direction
-        if (e.deltaY > 0 && currentIndex < sections.length - 1) {
-            // Scroll right (next section)
-            scrollToSection(currentIndex + 1);
-        } else if (e.deltaY < 0 && currentIndex > 0) {
-            // Scroll left (previous section)
-            scrollToSection(currentIndex - 1);
+        if (isMobileView) return;
+        else{
+            e.preventDefault();
+            
+            if (isScrolling) return;
+            
+            // Determine direction
+            if (e.deltaY > 0 && currentIndex < sections.length - 1) {
+                // Scroll right (next section)
+                scrollToSection(currentIndex + 1);
+            } else if (e.deltaY < 0 && currentIndex > 0) {
+                // Scroll left (previous section)
+                scrollToSection(currentIndex - 1);
+            }
         }
     }, { passive: false });
     
@@ -77,16 +108,21 @@ document.addEventListener('DOMContentLoaded', function() {
             scrollToSection(index);
         });
     });
-    
-    // Handle scroll event to update navigation
-    scroll_x.addEventListener('scroll', function() {
+
+    function handleScroll() {
         if (!isScrolling) {
             const index = getCurrentSection();
             if (index !== currentIndex) {
                 updateNav(index);
             }
         }
-    });
+    }
+    
+    // Handle scroll event to update navigation
+    window.addEventListener('scroll', handleScroll); // For mobile view
+    scroll_x.addEventListener('scroll', handleScroll); // For desktop view
+
+
 
     const languageButtons = document.querySelectorAll(".language-btn");
     const projectsContainer = document.querySelector(".projects-container");
@@ -182,7 +218,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update on window resize
     window.addEventListener('resize', function() {
-        scrollToSection(currentIndex);
+        const wasMobileView = isMobileView;
+        isMobileView = window.innerWidth <= 1000;
+        
+        // If view mode changed, reposition to current section
+        if (wasMobileView !== isMobileView) {
+            scrollToSection(currentIndex);
+        }
     });
     
     // Handle keyboard navigation
@@ -203,5 +245,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector(".projects-outer-container").addEventListener("mouseleave", function () {
         projectsContainer.style.animationPlayState = "running";
+    });
+
+    document.querySelectorAll('a').forEach(link => {
+        link.setAttribute('target', '_blank');
     });
 });
