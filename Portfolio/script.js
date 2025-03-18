@@ -77,21 +77,34 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Handle wheel event (convert vertical scroll to horizontal)
     document.addEventListener('wheel', function(e) {
-        if (isMobileView) return;
-        else{
-            e.preventDefault();
-            
-            if (isScrolling) return;
-            
-            // Determine direction
-            if (e.deltaY > 0 && currentIndex < sections.length - 1) {
-                // Scroll right (next section)
-                scrollToSection(currentIndex + 1);
-            } else if (e.deltaY < 0 && currentIndex > 0) {
-                // Scroll left (previous section)
-                scrollToSection(currentIndex - 1);
-            }
+    if (isMobileView) return;
+    else {
+        e.preventDefault();
+        if (isScrolling) return;
+        
+        // Handle vertical scrolling (deltaY)
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        // Convert vertical scroll to horizontal movement
+        if (e.deltaY > 0 && currentIndex < sections.length - 1) {
+            // Scroll down = move right to next section
+            scrollToSection(currentIndex + 1);
+        } else if (e.deltaY < 0 && currentIndex > 0) {
+            // Scroll up = move left to previous section
+            scrollToSection(currentIndex - 1);
         }
+        } 
+        // Handle horizontal scrolling (deltaX)
+        else {
+        // Direct horizontal movement - fixed directions
+        if (e.deltaX > 0 && currentIndex < sections.length - 1) {
+            // Scroll right (positive deltaX) = move right to next section
+            scrollToSection(currentIndex + 1);
+        } else if (e.deltaX < 0 && currentIndex > 0) {
+            // Scroll left (negative deltaX) = move left to previous section
+            scrollToSection(currentIndex - 1);
+        }
+        }
+    }
     }, { passive: false });
     
     // Handle click on navigation links
