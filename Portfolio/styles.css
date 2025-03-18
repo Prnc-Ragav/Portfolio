@@ -189,7 +189,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     text-align: center;
     font-style: italic;
     color: #777;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto 50px;
     padding: 0 20px;
 }
