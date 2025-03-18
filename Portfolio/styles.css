@@ -130,7 +130,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
     flex-direction: column;
     max-width: 800px;
     gap:40px;
-    margin-left: 20px;
+    /* margin-left: 20px; */
 }
 
 .home-text h1 {
@@ -755,6 +755,7 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
         flex: 1 1 100%;
         text-align: center;
         align-items: center;
+        /* margin-left: 0; */
     }
     
     .home-text h1 {
