@@ -757,18 +757,25 @@ section:nth-child(6) { background-color: #6c757d; color: white; }
         align-items: center;
         /* margin-left: 0; */
     }
+
+    .home-image img {
+        border-radius: 50%;
+        width: 250px;
+    }
     
     .home-text h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
     
     .home-text h2 {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         text-align: center;
     }
 
     .home-text p {
         text-align: center;
+        font-size: 1.3rem;
+        letter-spacing: .5px;
     }
 
     #skills {
