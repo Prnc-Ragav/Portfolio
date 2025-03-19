@@ -10,11 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to update navigation
     function updateNav(index) {
-        // Update header links
         navLinks.forEach(link => link.classList.remove('active'));
         navLinks[index].classList.add('active');
         
-        // Update dots
         dots.forEach(dot => dot.classList.remove('active'));
         dots[index].classList.add('active');
         
@@ -138,142 +136,132 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     const languageButtons = document.querySelectorAll(".language-btn");
-const projectsContainer = document.querySelector(".projects-container");
-const projectCards = document.querySelectorAll(".project-card");
-let initialDuration = null; // Store the initial animation duration
-let initialTotalWidth = null; // Store the initial total width
+    const projectsContainer = document.querySelector(".projects-container");
+    const projectCards = document.querySelectorAll(".project-card");
+    let initialDuration = null;
+    let initialTotalWidth = null;
 
-// Function to duplicate project cards for seamless scrolling
-function duplicateProjects() {
-    projectsContainer.innerHTML = ""; // Clear container
+    function duplicateProjects() {
+        projectsContainer.innerHTML = ""; 
 
-    // Append original set of project cards twice to create looping effect
-    const allCards = [...projectCards, ...projectCards, ...projectCards]; // Triple the cards for better looping
-    allCards.forEach((card) => {
-        const clone = card.cloneNode(true);
-        projectsContainer.appendChild(clone);
-    });
+        const allCards = [...projectCards, ...projectCards, ...projectCards]; 
+        allCards.forEach((card) => {
+            const clone = card.cloneNode(true);
+            projectsContainer.appendChild(clone);
+        });
 
-    updateScrolling(true); // Force animation for "all"
-}
-
-// Function to filter and display projects
-function updateProjectsContainer(language) {
-    projectsContainer.innerHTML = ""; // Clear existing projects
-
-    // Filter projects based on selected language
-    let filteredCards = [];
-    projectCards.forEach((card) => {
-        if (language === "all" || card.getAttribute("data-category") === language) {
-            filteredCards.push(card.cloneNode(true));
-        }
-    });
-
-    // For "all" category, duplicate cards for seamless looping
-    if (language === "all" && filteredCards.length > 0) {
-        // Create enough duplicates to ensure a seamless loop
-        filteredCards = [...filteredCards, ...filteredCards, ...filteredCards];
+        updateScrolling(true); 
     }
 
-    // Append filtered cards
-    filteredCards.forEach((card) => projectsContainer.appendChild(card));
+    // Function to filter and display projects
+    function updateProjectsContainer(language) {
+        projectsContainer.innerHTML = ""; 
 
-    // Apply appropriate scrolling behavior
-    updateScrolling(language === "all");
-}
+        // Filter projects based on selected language
+        let filteredCards = [];
+        projectCards.forEach((card) => {
+            if (language === "all" || card.getAttribute("data-category") === language) {
+                filteredCards.push(card.cloneNode(true));
+            }
+        });
 
-// Function to adjust scrolling animation based on content width and selected language
-function updateScrolling(isAllCategory) {
-    // Only apply auto-scrolling animation for "all" category
-    if (isAllCategory) {
-        // Calculate total width of all cards if this is the first time
-        if (initialTotalWidth === null) {
-            let totalWidth = 0;
-            const cards = projectsContainer.querySelectorAll(".project-card");
-            cards.forEach((card) => {
-                totalWidth += card.offsetWidth + 32; // Account for gap (2rem)
-            });
-            initialTotalWidth = totalWidth;
-            
-            // Calculate the initial duration based on content
-            const containerWidth = projectsContainer.parentElement.offsetWidth;
-            const cardCount = cards.length;
-            initialDuration = Math.max(15, cardCount * 1.5); // At least 15 seconds
+        // For "all" category, duplicate cards for seamless looping
+        if (language === "all" && filteredCards.length > 0) {
+            filteredCards = [...filteredCards, ...filteredCards, ...filteredCards];
         }
-        
-        // Reset any previous settings
-        projectsContainer.style.transform = "translateX(0)";
-        
-        // Disable user scrolling for "all" category
-        projectsContainer.style.overflowX = "hidden";
-        projectsContainer.parentElement.style.overflowX = "hidden";
-        
-        // Apply animation using the stored initial values
-        if (initialTotalWidth > projectsContainer.parentElement.offsetWidth) {
-            // Use the stored initial duration for consistency
-            projectsContainer.style.animation = `scrollProjects ${initialDuration}s linear infinite`;
-            
-            // Create a CSS rule for the animation
-            const styleSheet = document.styleSheets[0];
-            let animationRule = `
-                @keyframes scrollProjects {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-${initialTotalWidth / 3}px); }
-                }
-            `;
-            
-            // Try to find and remove any existing scrollProjects animation
-            for (let i = 0; i < styleSheet.cssRules.length; i++) {
-                if (styleSheet.cssRules[i].name === 'scrollProjects') {
-                    styleSheet.deleteRule(i);
-                    break;
-                }
+
+        filteredCards.forEach((card) => projectsContainer.appendChild(card));
+
+        updateScrolling(language === "all");
+    }
+
+    // Function to adjust scrolling animation based on content width and selected language
+    function updateScrolling(isAllCategory) {
+        if (isAllCategory) {
+            if (initialTotalWidth === null) {
+                let totalWidth = 0;
+                const cards = projectsContainer.querySelectorAll(".project-card");
+                cards.forEach((card) => {
+                    totalWidth += card.offsetWidth + 32; // Account for gap (2rem)
+                });
+                initialTotalWidth = totalWidth;
+                
+                const containerWidth = projectsContainer.parentElement.offsetWidth;
+                const cardCount = cards.length;
+                initialDuration = Math.max(15, cardCount * 1.5); // At least 15 seconds
             }
             
-            // Add the new animation rule
-            try {
-                styleSheet.insertRule(animationRule, styleSheet.cssRules.length);
-            } catch (e) {
-                // If inserting to the stylesheet fails, create a new style element
-                const styleElement = document.createElement('style');
-                styleElement.textContent = animationRule;
-                document.head.appendChild(styleElement);
+            // Reset any previous settings
+            projectsContainer.style.transform = "translateX(0)";
+            
+            // Disable user scrolling for "all" category
+            projectsContainer.style.overflowX = "hidden";
+            projectsContainer.parentElement.style.overflowX = "hidden";
+            
+            // Apply animation using the stored initial values
+            if (initialTotalWidth > projectsContainer.parentElement.offsetWidth) {
+                projectsContainer.style.animation = `scrollProjects ${initialDuration}s linear infinite`;
+                
+                // Create a CSS rule for the animation
+                const styleSheet = document.styleSheets[0];
+                let animationRule = `
+                    @keyframes scrollProjects {
+                        0% { transform: translateX(0); }
+                        100% { transform: translateX(-${initialTotalWidth / 3}px); }
+                    }
+                `;
+                
+                // Find and remove any existing scrollProjects animation
+                for (let i = 0; i < styleSheet.cssRules.length; i++) {
+                    if (styleSheet.cssRules[i].name === 'scrollProjects') {
+                        styleSheet.deleteRule(i);
+                        break;
+                    }
+                }
+                
+                // Add the new animation rule
+                try {
+                    styleSheet.insertRule(animationRule, styleSheet.cssRules.length);
+                } catch (e) {
+                    // If inserting to the stylesheet fails, create a new style element
+                    const styleElement = document.createElement('style');
+                    styleElement.textContent = animationRule;
+                    document.head.appendChild(styleElement);
+                }
+            } else {
+                projectsContainer.style.animation = "none";
             }
         } else {
+            // Enable user scrolling for other categories
             projectsContainer.style.animation = "none";
+            projectsContainer.style.overflowX = "auto";
+            projectsContainer.parentElement.style.overflowX = "auto";
+            projectsContainer.style.scrollBehavior = "smooth";
         }
-    } else {
-        // Enable user scrolling for other categories
-        projectsContainer.style.animation = "none";
-        projectsContainer.style.overflowX = "auto";
-        projectsContainer.parentElement.style.overflowX = "auto";
-        projectsContainer.style.scrollBehavior = "smooth";
     }
-}
 
-// Add hover pause functionality
-projectsContainer.addEventListener('mouseenter', () => {
-    if (projectsContainer.style.animation !== "none") {
-        projectsContainer.style.animationPlayState = 'paused';
-    }
-});
+    // // Add hover pause functionality
+    // projectsContainer.addEventListener('mouseenter', () => {
+    //     if (projectsContainer.style.animation !== "none") {
+    //         projectsContainer.style.animationPlayState = 'paused';
+    //     }
+    // });
 
-projectsContainer.addEventListener('mouseleave', () => {
-    if (projectsContainer.style.animation !== "none") {
-        projectsContainer.style.animationPlayState = 'running';
-    }
-});
+    // projectsContainer.addEventListener('mouseleave', () => {
+    //     if (projectsContainer.style.animation !== "none") {
+    //         projectsContainer.style.animationPlayState = 'running';
+    //     }
+    // });
 
-// Event Listeners for Language Buttons
-languageButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-        languageButtons.forEach((btn) => btn.classList.remove("active"));
-        this.classList.add("active");
+    languageButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            languageButtons.forEach((btn) => btn.classList.remove("active"));
+            this.classList.add("active");
 
-        const language = this.getAttribute("data-language");
-        updateProjectsContainer(language);
+            const language = this.getAttribute("data-language");
+            updateProjectsContainer(language);
+        });
     });
-});
 
     // Initial setup to show all projects and enable scrolling
     duplicateProjects();
@@ -283,18 +271,14 @@ languageButtons.forEach((button) => {
     
     skillTabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            // Remove active class from all tabs
             skillTabs.forEach(t => t.classList.remove('active'));
             
-            // Add active class to clicked tab
             this.classList.add('active');
             
-            // Hide all skill categories
             skillCategories.forEach(category => {
                 category.classList.remove('active');
             });
             
-            // Show the selected category
             const categoryToShow = this.getAttribute('data-category');
             document.getElementById(`${categoryToShow}-skills`).classList.add('active');
         });
